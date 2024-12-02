@@ -29,7 +29,7 @@ class CountCharactersInStringArrayTest(unittest.TestCase):
 
 
 def get_evens_in_number_array(
-    arr: List[Union[int, float]], acc: Optional[List[int]] = None
+        arr: List[Union[int, float]], acc: Optional[List[int]] = None
 ):
     """Problem 2"""
     if acc is None:
@@ -156,5 +156,5 @@ class FindUniquePathsTestCase(unittest.TestCase):
         self.assertEqual(find_unique_paths(3, 7), 28)
 
 
-if __name__ == "__main__":
-    print("hello")
+if __name__ == '__main__':
+    unittest.main()

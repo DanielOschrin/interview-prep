@@ -1,6 +1,8 @@
 # Chapter 12 - Dynamic Programming (pg. 183)
-from typing import Dict, Optional
+import unittest
+from typing import Dict, List, Optional
 from unittest import TestCase
+from unittest.mock import patch
 
 
 def get_nth_fibonacci(n: int, memo: Optional[Dict] = None):
@@ -37,3 +39,49 @@ class GetNthFibonacciTestCase(TestCase):
         self.assertEqual(get_nth_fibonacci(5), 5)
         self.assertEqual(get_nth_fibonacci(8), 21)
         self.assertEqual(get_nth_fibonacci(10), 55)
+
+
+def add_until_100_inefficient(array: List):
+    """Problem 1: Optimize this"""
+    if len(array) == 0:
+        return 0
+    if array[0] + add_until_100_inefficient(array[1:]) > 100:
+        return add_until_100_inefficient(array[1:])
+    else:
+        return array[0] + add_until_100_inefficient(array[1:])
+
+
+def add_until_100_optimized(array: List):
+    if len(array) == 0:
+        return 0
+    # Optimized by ensuring we only recurse once per call
+    result_before_adding = add_until_100_optimized(array[1:])
+    result_after_adding = result_before_adding + array[0]
+    if result_after_adding > 100:
+        return result_before_adding
+    else:
+        return result_after_adding
+
+
+class AddUntilOneHundredTestCase(TestCase):
+    @classmethod
+    def get_values(cls):
+        return [5, 10, 20, 30, 40]
+
+    def test_inefficient(self):
+        with patch(__name__ +
+                   '.add_until_100_inefficient',
+                   wraps=add_until_100_inefficient) as counter:
+            add_until_100_inefficient(self.get_values())
+            self.assertEqual(counter.call_count, 63)
+
+    def test_optimized(self):
+        with patch(__name__ +
+                   '.add_until_100_optimized',
+                   wraps=add_until_100_optimized) as counter:
+            add_until_100_optimized(self.get_values())
+            self.assertEqual(counter.call_count, 6)
+
+
+if __name__ == '__main__':
+    unittest.main()
