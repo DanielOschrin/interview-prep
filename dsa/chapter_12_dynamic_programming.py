@@ -41,14 +41,14 @@ class GetNthFibonacciTestCase(TestCase):
         self.assertEqual(get_nth_fibonacci(10), 55)
 
 
-def add_until_100_inefficient(array: List):
+def add_until_100(array: List):
     """Problem 1: Optimize this"""
     if len(array) == 0:
         return 0
-    if array[0] + add_until_100_inefficient(array[1:]) > 100:
-        return add_until_100_inefficient(array[1:])
+    if array[0] + add_until_100(array[1:]) > 100:
+        return add_until_100(array[1:])
     else:
-        return array[0] + add_until_100_inefficient(array[1:])
+        return array[0] + add_until_100(array[1:])
 
 
 def add_until_100_optimized(array: List):
@@ -68,19 +68,50 @@ class AddUntilOneHundredTestCase(TestCase):
     def get_values(cls):
         return [5, 10, 20, 30, 40]
 
-    def test_inefficient(self):
-        with patch(__name__ +
-                   '.add_until_100_inefficient',
-                   wraps=add_until_100_inefficient) as counter:
-            add_until_100_inefficient(self.get_values())
-            self.assertEqual(counter.call_count, 63)
+    @patch(f'{__name__}.add_until_100',
+           wraps=add_until_100)
+    def test_inefficient(self, counter):
+        self.assertEqual(add_until_100(self.get_values()), 100)
+        self.assertEqual(counter.call_count, 63)
 
-    def test_optimized(self):
-        with patch(__name__ +
-                   '.add_until_100_optimized',
-                   wraps=add_until_100_optimized) as counter:
-            add_until_100_optimized(self.get_values())
-            self.assertEqual(counter.call_count, 6)
+    @patch(f'{__name__}.add_until_100_optimized',
+           wraps=add_until_100_optimized)
+    def test_optimized(self, counter):
+        self.assertEqual(add_until_100_optimized(self.get_values()), 100)
+        self.assertEqual(counter.call_count, 6)
+
+
+def golomb(n: int):
+    """Problem 2: optimize this with memoization"""
+    if n == 1:
+        return n
+    return 1 + golomb(n - golomb(golomb(n - 1)))
+
+
+def golomb_memoized(n: int, memo: Dict):
+    if n == 1:
+        return n
+    result = memo.get(n)
+    if result is None:
+        previous_term = golomb_memoized(n - 1, memo)
+        result = 1 + golomb_memoized(
+            n - golomb_memoized(previous_term, memo),
+            memo
+        )
+        memo[n] = result
+    return memo[n]
+
+
+class GolombTestCase(TestCase):
+    @patch(f'{__name__}.golomb', wraps=golomb)
+    def test_inefficient(self, counter):
+        self.assertEqual(golomb(5), 3)
+        self.assertEqual(counter.call_count, 40)
+
+    @patch(f'{__name__}.golomb_memoized', wraps=golomb_memoized)
+    def test_memoized(self, counter):
+        self.assertEqual(golomb_memoized(5, {}), 3)
+        self.assertEqual(counter.call_count, 13)
 
 
 if __name__ == '__main__':
