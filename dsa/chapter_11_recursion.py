@@ -1,13 +1,14 @@
 # Chapter 11 - Recursion - page 181
 import string
 import unittest
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 
 def count_characters_in_string_array(arr: List[str]):
     """Problem 1"""
     # Base case
-    # once we have counted the last character, arr[1:] will return an empty list, which will return 0
+    # once we have counted the last character, arr[1:] will return an empty
+    # list, which will return 0
     if len(arr) == 0:
         return 0
     # Count the characters in the first element of the array, then add
@@ -27,11 +28,13 @@ class CountCharactersInStringArrayTest(unittest.TestCase):
         self.assertEqual(result, 10)
 
 
-def get_evens_in_number_array(arr: List[Union[int, float]], acc: Optional[List[int]] = None):
+def get_evens_in_number_array(arr: List[Union[int, float]],
+                              acc: Optional[List[int]] = None):
     """Problem 2"""
     if acc is None:
         acc = []
-    # Base case: We have no items in the array to check for evenness, so we return the accumulator
+    # Base case: We have no items in the array to check for evenness,
+    # so we return the accumulator
     if len(arr) == 0:
         return acc
     next_number = arr[0]
@@ -65,7 +68,8 @@ def get_nth_triangular_number(n: int):
     if n == 1:
         return 1
     # Recurse by adding n to the 'smaller problem', which would start with 1
-    # e.g. get_nth_triangular_number(2) would add 2 to get_nth_triangular number(1), which returns 1
+    # e.g. get_nth_triangular_number(2) would add 2 to get_nth_triangular
+    # number(1), which returns 1
     return n + get_nth_triangular_number(n - 1)
 
 
@@ -108,14 +112,30 @@ class GetFirstIndexOfXTestCase(unittest.TestCase):
 
 def find_unique_paths(n_rows: int, n_columns: int):
     """Problem 5"""
+    # Base case
+    # This should never happen.
     if n_rows == 0 or n_columns == 0:
         return 0
-    if n_rows == 1 and n_columns == 1:
+    # At this point, we have narrowed down the path we are on into a 1x2 or
+    # 2x1 grid. In either case, there is only 1
+    # way to get to the end of the path.
+    if n_rows == 1 or n_columns == 1:
         return 1
 
-    # We are breaking the possibilities down into the sum of the two smaller grids we could create
-    # by reducing the dimensions by one.
-    return find_unique_paths(n_rows - 1, n_columns) + find_unique_paths(n_rows, n_columns - 1)
+    # We are breaking the possibilities down into the sum of the two smaller
+    # grids we could create by reducing the dimensions by one.
+    # When we start moving from upper left to bottom right, each time we
+    # move, we are basically creating a smaller grid of possibilities by
+    # cutting off an entire row or column.
+    # This works because each possibility essentially spawns a unique path,
+    # which will eventually get reduced down to a 1x2 or 2x1 grid, at the
+    # end. So, we are summing up all of these unique
+    # paths.
+
+    return (
+            find_unique_paths(n_rows - 1, n_columns)
+            + find_unique_paths(n_rows, n_columns - 1)
+    )
 
 
 class FindUniquePathsTestCase(unittest.TestCase):
