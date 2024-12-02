@@ -21,15 +21,16 @@ class CountCharactersInStringArrayTest(unittest.TestCase):
         self.assertEqual(count_characters_in_string_array([]), 0)
 
     def test_single_string(self):
-        self.assertEqual(count_characters_in_string_array(['a']), 1)
+        self.assertEqual(count_characters_in_string_array(["a"]), 1)
 
     def test_complex_array(self):
-        result = count_characters_in_string_array(['ab', 'c', 'def', 'wick'])
+        result = count_characters_in_string_array(["ab", "c", "def", "wick"])
         self.assertEqual(result, 10)
 
 
-def get_evens_in_number_array(arr: List[Union[int, float]],
-                              acc: Optional[List[int]] = None):
+def get_evens_in_number_array(
+    arr: List[Union[int, float]], acc: Optional[List[int]] = None
+):
     """Problem 2"""
     if acc is None:
         acc = []
@@ -46,7 +47,6 @@ def get_evens_in_number_array(arr: List[Union[int, float]],
 
 
 class GetEvensInNumberArrayTestCase(unittest.TestCase):
-
     def test_empty_array(self):
         self.assertEqual(get_evens_in_number_array([]), [])
 
@@ -90,7 +90,7 @@ class GetNthTriangularNumberTestCase(unittest.TestCase):
 def get_first_index_of_x(target: str):
     """Problem 4"""
     # base case - we found it
-    if target[0] == 'x':
+    if target[0] == "x":
         return 0
     # We add 1 to the index because we have 'moved' further into the string
     return 1 + get_first_index_of_x(target[1:])
@@ -104,9 +104,9 @@ class GetFirstIndexOfXTestCase(unittest.TestCase):
     #     self.assertEqual(get_first_index_of_x('abc'), -1)
 
     def test_string_with_x(self):
-        self.assertEqual(get_first_index_of_x('x'), 0)
-        self.assertEqual(get_first_index_of_x('xxx'), 0)
-        self.assertEqual(get_first_index_of_x('abc x'), 4)
+        self.assertEqual(get_first_index_of_x("x"), 0)
+        self.assertEqual(get_first_index_of_x("xxx"), 0)
+        self.assertEqual(get_first_index_of_x("abc x"), 4)
         self.assertEqual(get_first_index_of_x(string.ascii_lowercase), 23)
 
 
@@ -132,9 +132,8 @@ def find_unique_paths(n_rows: int, n_columns: int):
     # end. So, we are summing up all of these unique
     # paths.
 
-    return (
-            find_unique_paths(n_rows - 1, n_columns)
-            + find_unique_paths(n_rows, n_columns - 1)
+    return find_unique_paths(n_rows - 1, n_columns) + find_unique_paths(
+        n_rows, n_columns - 1
     )
 
 
@@ -157,5 +156,5 @@ class FindUniquePathsTestCase(unittest.TestCase):
         self.assertEqual(find_unique_paths(3, 7), 28)
 
 
-if __name__ == '__main__':
-    print('hello')
+if __name__ == "__main__":
+    print("hello")
