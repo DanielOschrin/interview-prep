@@ -1,16 +1,25 @@
 # Chapter 12 - Dynamic Programming (pg. 183)
+from typing import Dict, Optional
 from unittest import TestCase
 
 
-def get_nth_fibonacci(n: int):
+def get_nth_fibonacci(n: int, memo: Optional[Dict] = None):
     # Base case
-    if n < 0:
-        raise ValueError("N cannot be less than 0, got" + n)
-
     if n < 2:
         return n
+    if memo is None:
+        memo = {}
 
-    return get_nth_fibonacci(n - 1) + get_nth_fibonacci(n - 2)
+    # Check to see if we have already calculated the result
+    result = memo.get(n)
+
+    if result is None:
+        # If not, calculate it. However, each call now checks for memoized
+        # result, instead of spawning a ton of child recursive calls
+        result = get_nth_fibonacci(n - 1) + get_nth_fibonacci(n - 2)
+        memo[n] = result
+
+    return result
 
 
 class GetNthFibonacciTestCase(TestCase):
